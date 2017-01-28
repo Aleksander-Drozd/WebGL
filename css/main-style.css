@@ -1,0 +1,22 @@
+body{
+    background-color: #393939;
+}
+
+.container{
+    margin-right: auto;
+    margin-left: auto;
+    border: solid red 1px;
+    width: 1400px;
+}
+
+nav{
+    width: 500px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+a{
+    font-weight: bold;
+    color: #FFFFFF;
+}
