@@ -23,7 +23,6 @@ var _cubeTexture;
 var X, Y, Z;
 
 // funkcja główna
-
 function runWebGL () {
     getRotation();
     gl_canvas = document.getElementById("canvas");
@@ -31,7 +30,7 @@ function runWebGL () {
     gl_initShaders();
     gl_initBuffers();
     gl_setMatrix();
-    _cubeTexture = gl_initTexture('../textures/cubetexture.png');
+    _cubeTexture = gl_initTexture('../textures/cubetexture2.png');
     gl_draw(); }
 
 // osie obrotu
@@ -183,7 +182,7 @@ function gl_setMatrix () {
 // tekstura
 
 function gl_initTexture(imageName) {
-    var img = new Image();
+    let img = new Image();
 
     img.src = imageName;
     img.webglTexture = false;

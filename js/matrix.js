@@ -28,7 +28,7 @@ var MATRIX = {
         ];
     },
 
-// obrót macierzy wokół osi X o zadany kąt 
+// obrót macierzy wokół osi X o zadany kąt
     rotateX: function(movMat, angle) {
         var sin = Math.sin(angle);
         var cos = Math.cos(angle);
@@ -81,6 +81,6 @@ var MATRIX = {
 
 // przesunięcie macierzy wzdłuż osi Z
     translateZ: function (movMat, trans) {
-        movMat[14] += trans;
+        movMat[14] = trans;
     }
 };

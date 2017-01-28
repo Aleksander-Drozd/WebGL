@@ -5,9 +5,9 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    document.querySelector('#cubetexture').addEventListener('click', setTexture('cubetexture'));
-    document.querySelector('#cubetexture2').addEventListener('click', setTexture('cubetexture2'));
-    document.querySelector('#cubetexture3').addEventListener('click', setTexture('cubetexture3'));
+    document.querySelector('#cubetexture').addEventListener('click', setTexture);
+    document.querySelector('#cubetexture2').addEventListener('click', setTexture);
+    document.querySelector('#cubetexture3').addEventListener('click', setTexture);
 });
 
 function updateRotation() {
@@ -16,6 +16,6 @@ function updateRotation() {
     Z = document.getElementById('rotateZ').checked;
 }
 
-function setTexture(id) {
-    gl_initTexture(id + '.png');
+function setTexture() {
+    _cubeTexture = gl_initTexture('../textures/' + this.id + '.png');
 }
