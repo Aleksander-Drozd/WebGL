@@ -7,6 +7,7 @@ body{
     margin-left: auto;
     border: solid red 1px;
     width: 1400px;
+    text-align: center;
 }
 
 nav{
@@ -19,4 +20,10 @@ nav{
 a{
     font-weight: bold;
     color: #FFFFFF;
+}
+
+canvas{
+    border: 1px solid #66666D;
+    width: 600px;
+    height: 300px;
 }
