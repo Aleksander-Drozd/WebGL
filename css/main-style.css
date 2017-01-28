@@ -15,6 +15,7 @@ nav{
     margin-right: auto;
     margin-left: auto;
     text-align: center;
+    margin-bottom: 20px;
 }
 
 a{
@@ -24,6 +25,12 @@ a{
 
 canvas{
     border: 1px solid #66666D;
-    width: 600px;
-    height: 300px;
+}
+
+img{
+    width: 100px;
+    line-height: 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    cursor: pointer;
 }
