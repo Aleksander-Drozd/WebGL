@@ -168,8 +168,6 @@ function gl_initBuffers () {
         gl_ctx.STATIC_DRAW);
 }
 
-
-
 // Macierz
 function gl_setMatrix () {
     _matrixProjection = MATRIX.getProjection(40,
@@ -180,7 +178,6 @@ function gl_setMatrix () {
 }
 
 // tekstura
-
 function gl_initTexture(imageName) {
     let img = new Image();
 

@@ -28,13 +28,13 @@ a:hover{
 
 canvas{
     background-color: #222222;
+    margin-top: 20px;
 }
 
 img{
     width: 100px;
     line-height: 100px;
     margin-top: 20px;
-    margin-bottom: 20px;
     cursor: pointer;
 }
 
