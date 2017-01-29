@@ -80,27 +80,20 @@ function gl_initShaders () {
 
 // bufory 
 function gl_initBuffers () {
-    // var triangleVertices = [
-    //     -1, -1,     0, 0, 1,
-    //     1, -1,      1, 1, 1,
-    //     1, 1,       1, 0, 0,
-    //     -1,-1,      0, 1, 1,
-    //     -1,1,      1, 0, 1,
-    //     1,1,      1, 1, 0
-    // ];
+    drawCarpet(3, 0, 0, 2, 1);
+    for (let i=0; i<triangleVertices.length / 5; i+=4){
+        triangleFaces = triangleFaces.concat([i, i+1, i+2]);
+        triangleFaces = triangleFaces.concat([i+2, i+3, i]);
+    }
 
-    drawCarpet();
+    console.dir(triangleVertices);
+    console.dir(triangleFaces);
 
     _triangleVertexBuffer = gl_ctx.createBuffer();
     gl_ctx.bindBuffer(gl_ctx.ARRAY_BUFFER, _triangleVertexBuffer);
     gl_ctx.bufferData(gl_ctx.ARRAY_BUFFER,
         new Float32Array(triangleVertices),
         gl_ctx.STATIC_DRAW);
-
-    // var triangleFaces = [
-    //     0, 1, 2,
-    //     3, 4, 5
-    // ];
 
     _triangleFacesBuffer = gl_ctx.createBuffer();
     gl_ctx.bindBuffer(gl_ctx.ELEMENT_ARRAY_BUFFER, _triangleFacesBuffer);
@@ -110,21 +103,23 @@ function gl_initBuffers () {
 }
 //console.dir
 
-function drawCarpet(steps, size, deformation) {
-    triangleVertices = [];
-    triangleFaces = [];
+function drawCarpet(steps, x, y, size, deformation) {
+    let distance = size / 3;
+    let d1, d2;
 
-    addSquare(0, 0, 2);
-    addSquare(0, 0, 1);
-    addSquare(0, 0, 0.5);
-
-    for (let i=0; i<triangleVertices.length / 5; i+=4){
-        triangleFaces = triangleFaces.concat([i, i+1, i+2]);
-        triangleFaces = triangleFaces.concat([i+2, i+3, i]);
+    for (let i = 1; i > -2; i--) {
+        for (let j = -1; j < 2; j++) {
+            if (i == 0 && j == 0)
+                continue;
+            if (steps == 1) {
+                d1 = deformation/1000;
+                d2 = deformation/1000;
+                addSquare(x + j * distance + d1, y + i * distance + d2, distance + Math.abs(d1));
+            }
+            else
+                drawCarpet(steps - 1, x + j * distance, y + i * distance, distance, deformation);
+        }
     }
-
-    console.dir(triangleVertices);
-    console.dir(triangleFaces);
 }
 
 function addSquare(x, y, size) {
