@@ -22,23 +22,7 @@ var X, Y, Z;
 const N = 40;
 var tab;
 var paramTab;
-var vectors;
 var colors;
-// var status = 1;
-// var azymut, elewacja;
-//
-// var viewer = [ 0.0, 0.0, 10.0 ];
-//
-var R = 10;
-
-var pix2anglex;
-var pix2angley;
-
-var x_pos_old = 0;
-var y_pos_old = 0;
-
-var delta_x = 0;
-var delta_y = 0;
 
 // funkcja główna
 function runWebGL () {
@@ -126,18 +110,7 @@ function gl_initShaders () {
 }
 
 // bufory
-
 function gl_initBuffers () {
-    // var triangleVertices = [
-    //     -1, -1, -1, 0, 0, 0,
-    //     1, -1, -1,  1, 0, 0,
-    //     1, 1, -1,   1, 1, 0,
-    //     -1, 1, -1,  0, 1, 0,
-    //     -1, -1, 1,  0, 0, 1,
-    //     1, -1, 1,   1, 0, 1,
-    //     1, 1, 1,    1, 1, 1,
-    //     -1, 1, 1,   0, 1, 1
-    // ];
     prepareArrays();
     setNet();
     computeCoordinates();
@@ -147,35 +120,11 @@ function gl_initBuffers () {
         triangleFaces = triangleFaces.concat([i, i+1, i+2]);
     }
 
-    // console.log('Triangle Verices');
-    // console.dir(triangleVertices);
-    // console.log('Triangle Faces');
-    // console.dir(triangleFaces);
-    // console.log('param Tab');
-    // console.dir(paramTab);
-    // console.log('tab');
-    // console.dir(tab);
-
     _triangleVertexBuffer = gl_ctx.createBuffer();
     gl_ctx.bindBuffer(gl_ctx.ARRAY_BUFFER, _triangleVertexBuffer);
     gl_ctx.bufferData(gl_ctx.ARRAY_BUFFER,
         new Float32Array(triangleVertices),
         gl_ctx.STATIC_DRAW);
-
-    // var triangleFaces = [
-    //     0, 1, 2,
-    //     0, 2, 3,
-    //     4, 5, 6,
-    //     4, 6, 7,
-    //     0, 3, 7,
-    //     0, 4, 7,
-    //     1, 2, 6,
-    //     1, 5, 6,
-    //     2, 3, 6,
-    //     3, 7, 6,
-    //     0, 1, 5,
-    //     0, 4, 5
-    // ];
 
     _triangleFacesBuffer = gl_ctx.createBuffer();
     gl_ctx.bindBuffer(gl_ctx.ELEMENT_ARRAY_BUFFER, _triangleFacesBuffer);
@@ -187,18 +136,15 @@ function gl_initBuffers () {
 function prepareArrays() {
     tab = new Array(N+1);
     paramTab = new Array(N+1);
-    vectors = new Array(N+1);
     colors = new Array(N+1);
 
     for (let i=0; i<N+1; i++){
         tab[i] = new Array(N+1);
         paramTab[i] = new Array(N+1);
-        vectors[i] = new Array(N+1);
         colors[i] = new Array(N+1);
 
         for (let j=0; j<N+1; j++){
             tab[i][j] = new Array(3);
-            vectors[i][j] = new Array(3);
             colors[i][j] = new Array(3);
             paramTab[i][j] = new Array(2);
         }
@@ -216,7 +162,6 @@ function setNet() {
 
 function computeCoordinates() {
     let ii, jj;
-    let xu, xv, yu, yv, zu, zv;
 
     for (let i = 0; i < N + 1; i++){
         for (let j = 0; j < N + 1; j++){
@@ -234,60 +179,27 @@ function computeCoordinates() {
             colors[i][j][0] = Math.random();
             colors[i][j][1] = Math.random();
             colors[i][j][2] = Math.random();
-
-            // xu = (-450 * Math.pow(ii, 4) + 900 * Math.pow(ii, 3) - 810 * Math.pow(ii, 2) + 360 * ii - 45)*Math.cos(Math.PI*jj);
-            // xv = Math.PI * (90 * Math.pow(ii, 5) - 225 * Math.pow(ii, 4) + 270 * Math.pow(ii, 3) - 180 * Math.pow(ii, 2) + 45 * ii)*Math.sin(Math.PI*jj);
-            // yu = 640 * Math.pow(ii, 3) - 960 * Math.pow(ii, 2) + 320 * ii;
-            // yv = 0;
-            // zu = (-450 * Math.pow(ii, 4) + 900 * Math.pow(ii, 3) - 810 * Math.pow(ii, 2) + 360 * ii - 45) * Math.sin(Math.PI*jj);
-            // zv = -1 * Math.PI * (90 * Math.pow(ii, 5) - 225 * Math.pow(ii, 4) + 270 * Math.pow(ii, 3) - 180 * Math.pow(ii, 2) + 45 * ii) * Math.cos(Math.PI*jj);
-            //
-            // vectors[i][j][0] = ((yu*zv) - (zu*yv));
-            // vectors[i][j][1] = ((zu*xv) - (xu*zv));
-            // vectors[i][j][2] = ((xu*yv) - (yu*xv));
-            //
-            // let dl = (Math.sqrt(Math.pow(vectors[i][j][0], 2) + Math.pow(vectors[i][j][1], 2) + Math.pow(vectors[i][j][2], 2)));
-            //
-            // vectors[i][j][0] /= dl;
-            // vectors[i][j][1] /= dl;
-            // vectors[i][j][2] /= dl;
         }
     }
+    colors[N][N] = colors[0][0];
 }
 
 function egg() {
     for (let i = 0; i < N; i++){
         for (let j = 0; j < N; j++){
             // glVertex3fv(tab[i][j]);
-            triangleVertices = triangleVertices.concat(
-                tab[i][j][0], tab[i][j][1], tab[i][j][2],
-                colors[i][j][0], colors[i][j][1], colors[i][j][2]);
-
+            triangleVertices = triangleVertices.concat(tab[i][j], colors[i][j]);
             // glVertex3fv(tab[i + 1][j]);
-            triangleVertices = triangleVertices.concat(
-                tab[i + 1][j][0], tab[i + 1][j][1], tab[i + 1][j][2],
-                colors[i + 1][j][0], colors[i + 1][j][1], colors[i + 1][j][2]);
+            triangleVertices = triangleVertices.concat(tab[i + 1][j], colors[i + 1][j]);
+            // glVertex3fv(tab[i][j + 1]);
+            triangleVertices = triangleVertices.concat(tab[i][j + 1], colors[i][j + 1]);
 
             // glVertex3fv(tab[i][j + 1]);
-            triangleVertices = triangleVertices.concat(
-                tab[i][j + 1][0], tab[i][j + 1][1], tab[i][j + 1][2],
-                colors[i][j + 1][0], colors[i][j + 1][1], colors[i][j + 1][2]);
-
-
-            // glVertex3fv(tab[i][j + 1]);
-            triangleVertices = triangleVertices.concat(
-                tab[i][j + 1][0], tab[i][j + 1][1], tab[i][j + 1][2],
-                colors[i][j + 1][0], colors[i][j + 1][1], colors[i][j + 1][2]);
-
+            triangleVertices = triangleVertices.concat(tab[i][j + 1], colors[i][j + 1]);
             // glVertex3fv(tab[i + 1][j]);
-            triangleVertices = triangleVertices.concat(
-                tab[i + 1][j][0], tab[i + 1][j][1], tab[i + 1][j][2],
-                colors[i + 1][j][0], colors[i + 1][j][1], colors[i + 1][j][2]);
-
+            triangleVertices = triangleVertices.concat(tab[i + 1][j], colors[i + 1][j]);
             // glVertex3fv(tab[i + 1][j + 1]);
-            triangleVertices = triangleVertices.concat(
-                tab[i + 1][j + 1][0], tab[i + 1][j + 1][1], tab[i + 1][j + 1][2],
-                colors[i + 1][j + 1][0], colors[i + 1][j + 1][1], colors[i + 1][j + 1][2]);
+            triangleVertices = triangleVertices.concat(tab[i + 1][j + 1], colors[i + 1][j + 1]);
         }
     }
 }
