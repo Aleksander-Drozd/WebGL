@@ -181,7 +181,6 @@ function computeCoordinates() {
             colors[i][j][2] = Math.random();
         }
     }
-    colors[N][N] = colors[0][0];
 }
 
 function egg() {

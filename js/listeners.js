@@ -23,13 +23,27 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function mouseMoved(e) {
-    // console.dir(e);
-    if (e.buttons == 2) { //LMB
+    if (e.buttons == 1){ //LMB
+        if(Math.abs(x_pos_old - e.clientX) > 30)
+            x_pos_old = e.clientX;
+        if(Math.abs(y_pos_old - e.clientY) > 30)
+            y_pos_old = e.clientY;
+
+        if (e.clientX - x_pos_old != 0){
+            MATRIX.rotateY(_matrixMovement, (e.clientX - x_pos_old)/100);
+        }
+        if (e.clientY - y_pos_old != 0){
+            MATRIX.rotateX(_matrixMovement, (e.clientY - y_pos_old)/100);
+        }
+
+        x_pos_old = e.clientX;
+        y_pos_old = e.clientY;
+    }else if (e.buttons == 2) { //RMB
         e.preventDefault();
         if(Math.abs(y_pos_old - e.clientY) > 30)
             y_pos_old = e.clientY;
 
-        zoomRatio += (e.clientY - y_pos_old) / 100;
+        zoomRatio += (y_pos_old - e.clientY) / 100;
         y_pos_old = e.clientY;
         MATRIX.translateZ(_matrixView, zoomRatio);
     }
