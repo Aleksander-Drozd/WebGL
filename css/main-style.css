@@ -5,7 +5,6 @@ body{
 .container{
     margin-right: auto;
     margin-left: auto;
-    border: solid red 1px;
     width: 1400px;
     text-align: center;
 }
@@ -15,16 +14,20 @@ nav{
     margin-right: auto;
     margin-left: auto;
     text-align: center;
-    margin-bottom: 20px;
 }
 
 a{
     font-weight: bold;
     color: #FFFFFF;
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
 }
 
 canvas{
-    border: 1px solid #66666D;
+    background-color: #222222;
 }
 
 img{
@@ -32,5 +35,16 @@ img{
     line-height: 100px;
     margin-top: 20px;
     margin-bottom: 20px;
+    cursor: pointer;
+}
+
+h2{
+    display: inline-block;
+    margin-right: 7px;
+}
+
+label{
+    font-weight: bold;
+    color: white;
     cursor: pointer;
 }
