@@ -116,7 +116,7 @@ function gl_initBuffers () {
         -1,-1,-1,     0, 0, //lewy blizszy 0
         1,-1,-1,     1, 0, //prawy blizszy 1
         1, -1, 1,     1, 1, //prawy dalszy 2
-        -1, -1,-1,     0, 1, //lewy dlaszy 3
+        -1, -1,1,     0, 1, //lewy dlaszy 3
         0, 1, 0,     0, 0, //czubek 4
     ];
 
@@ -126,7 +126,7 @@ function gl_initBuffers () {
     gl_ctx.bufferData(gl_ctx.ARRAY_BUFFER,
         new Float32Array(triangleVertices),
         gl_ctx.STATIC_DRAW);
-
+    //concat
     var triangleFaces = [
         0,1,2, // podloga
         2,3,0,
