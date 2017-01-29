@@ -5,7 +5,8 @@ var gl_ctx;
 var _triangleVertexBuffer;
 var _triangleFacesBuffer;
 var _position;
-var _color; var _PosMatrix;
+var _color;
+var _PosMatrix;
 var _MovMatrix;
 var _ViewMatrix;
 var _matrixProjection;
@@ -14,18 +15,20 @@ var _matrixView;
 
 var rotationSpeed = 0.001;
 var zoomRatio = -6;
-
+var triangleVertices = [];
+var triangleFaces = [];
 var X, Y, Z;
 
 const N = 40;
-var tab = [[]];
-var paramTab = [[[]]];
+var tab;
+var paramTab;
+var vectors;
+var colors;
 // var status = 1;
 // var azymut, elewacja;
 //
 // var viewer = [ 0.0, 0.0, 10.0 ];
 //
-var vectors = [[[]]];
 var R = 10;
 
 var pix2anglex;
@@ -125,16 +128,33 @@ function gl_initShaders () {
 // bufory
 
 function gl_initBuffers () {
-    var triangleVertices = [
-        -1, -1, -1, 0, 0, 0,
-        1, -1, -1,  1, 0, 0,
-        1, 1, -1,   1, 1, 0,
-        -1, 1, -1,  0, 1, 0,
-        -1, -1, 1,  0, 0, 1,
-        1, -1, 1,   1, 0, 1,
-        1, 1, 1,    1, 1, 1,
-        -1, 1, 1,   0, 1, 1
-    ];
+    // var triangleVertices = [
+    //     -1, -1, -1, 0, 0, 0,
+    //     1, -1, -1,  1, 0, 0,
+    //     1, 1, -1,   1, 1, 0,
+    //     -1, 1, -1,  0, 1, 0,
+    //     -1, -1, 1,  0, 0, 1,
+    //     1, -1, 1,   1, 0, 1,
+    //     1, 1, 1,    1, 1, 1,
+    //     -1, 1, 1,   0, 1, 1
+    // ];
+    prepareArrays();
+    setNet();
+    computeCoordinates();
+    egg();
+
+    for (let i=0; i<triangleVertices.length / 6; i+=3){
+        triangleFaces = triangleFaces.concat([i, i+1, i+2]);
+    }
+
+    // console.log('Triangle Verices');
+    // console.dir(triangleVertices);
+    // console.log('Triangle Faces');
+    // console.dir(triangleFaces);
+    // console.log('param Tab');
+    // console.dir(paramTab);
+    // console.log('tab');
+    // console.dir(tab);
 
     _triangleVertexBuffer = gl_ctx.createBuffer();
     gl_ctx.bindBuffer(gl_ctx.ARRAY_BUFFER, _triangleVertexBuffer);
@@ -142,26 +162,47 @@ function gl_initBuffers () {
         new Float32Array(triangleVertices),
         gl_ctx.STATIC_DRAW);
 
-    var triangleFaces = [
-        0, 1, 2,
-        0, 2, 3,
-        4, 5, 6,
-        4, 6, 7,
-        0, 3, 7,
-        0, 4, 7,
-        1, 2, 6,
-        1, 5, 6,
-        2, 3, 6,
-        3, 7, 6,
-        0, 1, 5,
-        0, 4, 5
-    ];
+    // var triangleFaces = [
+    //     0, 1, 2,
+    //     0, 2, 3,
+    //     4, 5, 6,
+    //     4, 6, 7,
+    //     0, 3, 7,
+    //     0, 4, 7,
+    //     1, 2, 6,
+    //     1, 5, 6,
+    //     2, 3, 6,
+    //     3, 7, 6,
+    //     0, 1, 5,
+    //     0, 4, 5
+    // ];
 
     _triangleFacesBuffer = gl_ctx.createBuffer();
     gl_ctx.bindBuffer(gl_ctx.ELEMENT_ARRAY_BUFFER, _triangleFacesBuffer);
     gl_ctx.bufferData(gl_ctx.ELEMENT_ARRAY_BUFFER,
         new Uint16Array(triangleFaces),
         gl_ctx.STATIC_DRAW);
+}
+
+function prepareArrays() {
+    tab = new Array(N+1);
+    paramTab = new Array(N+1);
+    vectors = new Array(N+1);
+    colors = new Array(N+1);
+
+    for (let i=0; i<N+1; i++){
+        tab[i] = new Array(N+1);
+        paramTab[i] = new Array(N+1);
+        vectors[i] = new Array(N+1);
+        colors[i] = new Array(N+1);
+
+        for (let j=0; j<N+1; j++){
+            tab[i][j] = new Array(3);
+            vectors[i][j] = new Array(3);
+            colors[i][j] = new Array(3);
+            paramTab[i][j] = new Array(2);
+        }
+    }
 }
 
 function setNet() {
@@ -186,22 +227,67 @@ function computeCoordinates() {
             tab[i][j][1] = 160 * Math.pow(paramTab[i][j][0], 4) - 320 * Math.pow(paramTab[i][j][0], 3) + 160 * Math.pow(paramTab[i][j][0], 2) - 5;
             tab[i][j][2] = (-90 * Math.pow(paramTab[i][j][0], 5) + 225 * Math.pow(paramTab[i][j][0], 4) - 270 * Math.pow(paramTab[i][j][0], 3) + 180 * Math.pow(paramTab[i][j][0], 2) - 45 * paramTab[i][j][0]) * Math.sin(Math.PI*paramTab[i][j][1]);
 
-            xu = (-450 * Math.pow(ii, 4) + 900 * Math.pow(ii, 3) - 810 * Math.pow(ii, 2) + 360 * ii - 45)*Math.cos(Math.PI*jj);
-            xv = Math.PI * (90 * Math.pow(ii, 5) - 225 * Math.pow(ii, 4) + 270 * Math.pow(ii, 3) - 180 * Math.pow(ii, 2) + 45 * ii)*Math.sin(Math.PI*jj);
-            yu = 640 * Math.pow(ii, 3) - 960 * Math.pow(ii, 2) + 320 * ii;
-            yv = 0;
-            zu = (-450 * Math.pow(ii, 4) + 900 * Math.pow(ii, 3) - 810 * Math.pow(ii, 2) + 360 * ii - 45) * Math.sin(Math.PI*jj);
-            zv = -1 * Math.PI * (90 * Math.pow(ii, 5) - 225 * Math.pow(ii, 4) + 270 * Math.pow(ii, 3) - 180 * Math.pow(ii, 2) + 45 * ii) * Math.cos(Math.PI*jj);
+            tab[i][j][0] = tab[i][j][0] / 2;
+            tab[i][j][1] = tab[i][j][1] / 2;
+            tab[i][j][2] = tab[i][j][2] / 2;
 
-            vectors[i][j][0] = ((yu*zv) - (zu*yv));
-            vectors[i][j][1] = ((zu*xv) - (xu*zv));
-            vectors[i][j][2] = ((xu*yv) - (yu*xv));
+            colors[i][j][0] = Math.random();
+            colors[i][j][1] = Math.random();
+            colors[i][j][2] = Math.random();
 
-            let dl = (Math.sqrt(Math.pow(vectors[i][j][0], 2) + Math.pow(vectors[i][j][1], 2) + Math.pow(vectors[i][j][2], 2)));
+            // xu = (-450 * Math.pow(ii, 4) + 900 * Math.pow(ii, 3) - 810 * Math.pow(ii, 2) + 360 * ii - 45)*Math.cos(Math.PI*jj);
+            // xv = Math.PI * (90 * Math.pow(ii, 5) - 225 * Math.pow(ii, 4) + 270 * Math.pow(ii, 3) - 180 * Math.pow(ii, 2) + 45 * ii)*Math.sin(Math.PI*jj);
+            // yu = 640 * Math.pow(ii, 3) - 960 * Math.pow(ii, 2) + 320 * ii;
+            // yv = 0;
+            // zu = (-450 * Math.pow(ii, 4) + 900 * Math.pow(ii, 3) - 810 * Math.pow(ii, 2) + 360 * ii - 45) * Math.sin(Math.PI*jj);
+            // zv = -1 * Math.PI * (90 * Math.pow(ii, 5) - 225 * Math.pow(ii, 4) + 270 * Math.pow(ii, 3) - 180 * Math.pow(ii, 2) + 45 * ii) * Math.cos(Math.PI*jj);
+            //
+            // vectors[i][j][0] = ((yu*zv) - (zu*yv));
+            // vectors[i][j][1] = ((zu*xv) - (xu*zv));
+            // vectors[i][j][2] = ((xu*yv) - (yu*xv));
+            //
+            // let dl = (Math.sqrt(Math.pow(vectors[i][j][0], 2) + Math.pow(vectors[i][j][1], 2) + Math.pow(vectors[i][j][2], 2)));
+            //
+            // vectors[i][j][0] /= dl;
+            // vectors[i][j][1] /= dl;
+            // vectors[i][j][2] /= dl;
+        }
+    }
+}
 
-            vectors[i][j][0] /= dl;
-            vectors[i][j][1] /= dl;
-            vectors[i][j][2] /= dl;
+function egg() {
+    for (let i = 0; i < N; i++){
+        for (let j = 0; j < N; j++){
+            // glVertex3fv(tab[i][j]);
+            triangleVertices = triangleVertices.concat(
+                tab[i][j][0], tab[i][j][1], tab[i][j][2],
+                colors[i][j][0], colors[i][j][1], colors[i][j][2]);
+
+            // glVertex3fv(tab[i + 1][j]);
+            triangleVertices = triangleVertices.concat(
+                tab[i + 1][j][0], tab[i + 1][j][1], tab[i + 1][j][2],
+                colors[i + 1][j][0], colors[i + 1][j][1], colors[i + 1][j][2]);
+
+            // glVertex3fv(tab[i][j + 1]);
+            triangleVertices = triangleVertices.concat(
+                tab[i][j + 1][0], tab[i][j + 1][1], tab[i][j + 1][2],
+                colors[i][j + 1][0], colors[i][j + 1][1], colors[i][j + 1][2]);
+
+
+            // glVertex3fv(tab[i][j + 1]);
+            triangleVertices = triangleVertices.concat(
+                tab[i][j + 1][0], tab[i][j + 1][1], tab[i][j + 1][2],
+                colors[i][j + 1][0], colors[i][j + 1][1], colors[i][j + 1][2]);
+
+            // glVertex3fv(tab[i + 1][j]);
+            triangleVertices = triangleVertices.concat(
+                tab[i + 1][j][0], tab[i + 1][j][1], tab[i + 1][j][2],
+                colors[i + 1][j][0], colors[i + 1][j][1], colors[i + 1][j][2]);
+
+            // glVertex3fv(tab[i + 1][j + 1]);
+            triangleVertices = triangleVertices.concat(
+                tab[i + 1][j + 1][0], tab[i + 1][j + 1][1], tab[i + 1][j + 1][2],
+                colors[i + 1][j + 1][0], colors[i + 1][j + 1][1], colors[i + 1][j + 1][2]);
         }
     }
 }
@@ -248,7 +334,7 @@ function gl_draw() {
 
         gl_ctx.bindBuffer(gl_ctx.ARRAY_BUFFER, _triangleVertexBuffer);
         gl_ctx.bindBuffer(gl_ctx.ELEMENT_ARRAY_BUFFER, _triangleFacesBuffer);
-        gl_ctx.drawElements(gl_ctx.TRIANGLES, 6*2*3, gl_ctx.UNSIGNED_SHORT, 0);
+        gl_ctx.drawElements(gl_ctx.TRIANGLES, triangleFaces.length, gl_ctx.UNSIGNED_SHORT, 0);
         gl_ctx.flush();
 
         window.requestAnimationFrame(animate);
