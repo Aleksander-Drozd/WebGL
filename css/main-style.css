@@ -48,3 +48,9 @@ label{
     color: white;
     cursor: pointer;
 }
+
+.carpet-controls{
+    width: 30px;
+    margin-right: 20px;
+    margin-left: 5px;
+}

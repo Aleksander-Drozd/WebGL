@@ -9,17 +9,22 @@
 <body>
 <div class="container">
     <nav>
-        <h2><a href="index.html">3.0</a></h2>
-        <h2><a href="pyramid.html">3.0 v2</a></h2>
-        <h2><a href="carpet.html">4.0</a></h2>
-        <h2><a href="egg.html">5.0</a></h2>
+        <h2><a href="index.html">Szescian</a></h2>
+        <h2><a href="pyramid.html">Piramida</a></h2>
+        <h2><a href="carpet.html">Dywan Sierpinskiego</a></h2>
+        <h2><a href="egg.html">Jajko</a></h2>
     </nav>
     <div class="controls">
     </div>
-    <canvas id="canvas" width="800" height="600">Brak wsparcia dla elementu HTML5 typu canvas.</canvas>
+    <canvas id="canvas" width="800" height="600">Brak wsparcia dla elementu HTML5 typu canvas.</canvas><br><br>
+    <label for="nesting">Stopien zagniezdzenia  </label>
+    <input type="number" class="carpet-controls" id="nesting" value="3" step="1" min="1" max="5">
+    <label for="deformation">Stopien deformacji  </label>
+    <input type="number" class="carpet-controls" id="deformation" value="1" step="1" min="0" max="5"><br><br>
+    <button id="start">Uruchom</button>
 </div>
 
 <script src="../js/carpet.js"></script>
-</div>
+<script src="../js/listeners.js"></script>
 </body>
 </html>

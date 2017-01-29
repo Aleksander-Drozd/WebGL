@@ -80,14 +80,15 @@ function gl_initShaders () {
 
 // bufory 
 function gl_initBuffers () {
-    drawCarpet(3, 0, 0, 2, 1);
+    let nesting = document.getElementById('nesting').value;
+    let deformation = document.getElementById('deformation').value;
+
+    drawCarpet(nesting, 0, 0, 1.9, deformation);
+
     for (let i=0; i<triangleVertices.length / 5; i+=4){
         triangleFaces = triangleFaces.concat([i, i+1, i+2]);
         triangleFaces = triangleFaces.concat([i+2, i+3, i]);
     }
-
-    console.dir(triangleVertices);
-    console.dir(triangleFaces);
 
     _triangleVertexBuffer = gl_ctx.createBuffer();
     gl_ctx.bindBuffer(gl_ctx.ARRAY_BUFFER, _triangleVertexBuffer);
@@ -101,19 +102,26 @@ function gl_initBuffers () {
         new Uint16Array(triangleFaces),
         gl_ctx.STATIC_DRAW);
 }
-//console.dir
 
 function drawCarpet(steps, x, y, size, deformation) {
     let distance = size / 3;
-    let d1, d2;
+    let d1 = 0, d2 = 0;
 
     for (let i = 1; i > -2; i--) {
         for (let j = -1; j < 2; j++) {
             if (i == 0 && j == 0)
                 continue;
             if (steps == 1) {
-                d1 = deformation/1000;
-                d2 = deformation/1000;
+                if (deformation != 0) {
+                    if (Math.random() > 0.5) {
+                        d1 = deformation / 1000;
+                        d2 = deformation / 1000;
+                    } else {
+                        d1 = -deformation / 800;
+                        d2 = -deformation / 800;
+                    }
+                }
+
                 addSquare(x + j * distance + d1, y + i * distance + d2, distance + Math.abs(d1));
             }
             else
@@ -168,5 +176,3 @@ function gl_draw() {
     };
     animate();
 }
-
-runWebGL();

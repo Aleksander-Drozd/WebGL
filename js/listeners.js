@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelector('#cubetexture3').addEventListener('click', setTexture);
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelector('#start').addEventListener('click', runWebGL);
+});
+
 function updateRotation() {
     X = document.getElementById('rotateX').checked;
     Y = document.getElementById('rotateY').checked;
