@@ -186,18 +186,12 @@ function computeCoordinates() {
 function egg() {
     for (let i = 0; i < N; i++){
         for (let j = 0; j < N; j++){
-            // glVertex3fv(tab[i][j]);
             triangleVertices = triangleVertices.concat(tab[i][j], colors[i][j]);
-            // glVertex3fv(tab[i + 1][j]);
             triangleVertices = triangleVertices.concat(tab[i + 1][j], colors[i + 1][j]);
-            // glVertex3fv(tab[i][j + 1]);
             triangleVertices = triangleVertices.concat(tab[i][j + 1], colors[i][j + 1]);
 
-            // glVertex3fv(tab[i][j + 1]);
             triangleVertices = triangleVertices.concat(tab[i][j + 1], colors[i][j + 1]);
-            // glVertex3fv(tab[i + 1][j]);
             triangleVertices = triangleVertices.concat(tab[i + 1][j], colors[i + 1][j]);
-            // glVertex3fv(tab[i + 1][j + 1]);
             triangleVertices = triangleVertices.concat(tab[i + 1][j + 1], colors[i + 1][j + 1]);
         }
     }

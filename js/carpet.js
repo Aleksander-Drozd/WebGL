@@ -86,8 +86,8 @@ function gl_initBuffers () {
     drawCarpet(nesting, 0, 0, 1.9, deformation);
 
     for (let i=0; i<triangleVertices.length / 5; i+=4){
-        triangleFaces = triangleFaces.concat([i, i+1, i+2]);
-        triangleFaces = triangleFaces.concat([i+2, i+3, i]);
+        triangleFaces = triangleFaces.concat(i, i+1, i+2);
+        triangleFaces = triangleFaces.concat(i+2, i+3, i);
     }
 
     _triangleVertexBuffer = gl_ctx.createBuffer();
@@ -114,8 +114,8 @@ function drawCarpet(steps, x, y, size, deformation) {
             if (steps == 1) {
                 if (deformation != 0) {
                     if (Math.random() > 0.5) {
-                        d1 = deformation / 1000;
-                        d2 = deformation / 1000;
+                        d1 = deformation / 800;
+                        d2 = deformation / 800;
                     } else {
                         d1 = -deformation / 800;
                         d2 = -deformation / 800;
@@ -135,20 +135,20 @@ function addSquare(x, y, size) {
     let color1, color2, color3;
 
     setRandomColors();
-    triangleVertices = triangleVertices.concat([
-        x - halfSize, y - halfSize, color1, color2, color3]);
+    triangleVertices = triangleVertices.concat(
+        x - halfSize, y - halfSize, color1, color2, color3);
 
     setRandomColors();
-    triangleVertices = triangleVertices.concat([
-        x + halfSize, y - halfSize, color1, color2, color3]);
+    triangleVertices = triangleVertices.concat(
+        x + halfSize, y - halfSize, color1, color2, color3);
 
     setRandomColors();
-    triangleVertices = triangleVertices.concat([
-        x + halfSize, y + halfSize, color1, color2, color3]);
+    triangleVertices = triangleVertices.concat(
+        x + halfSize, y + halfSize, color1, color2, color3);
 
     setRandomColors();
-    triangleVertices = triangleVertices.concat([
-        x - halfSize, y + halfSize, color1, color2, color3]);
+    triangleVertices = triangleVertices.concat(
+        x - halfSize, y + halfSize, color1, color2, color3);
 
     function setRandomColors() {
         color1 = Math.random();
